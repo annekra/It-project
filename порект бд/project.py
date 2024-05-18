@@ -138,7 +138,8 @@ c.execute('''CREATE TRIGGER IF NOT EXISTS before_delete_user
                   update chat_all_all set creator = (
                       select id_user_add from chat_all_for_one as cafo1
                       where time_add = (select min(time_add) from chat_all_for_one as cafo2
-                                        where cafo1.id_ch_c = cafo2.id_ch_c));
+                                        where cafo1.id_ch_c = cafo2.id_ch_c))
+                  where creator = NULL;
              end ''')
 
 ###
