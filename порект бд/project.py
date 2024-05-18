@@ -45,7 +45,7 @@ c.execute('''CREATE TABLE IF NOT EXISTS chat_all_all(
     id_chat integer not null,
     creator integer,
     count_users int(6) not null CONSTRAINT DF_chat_all_all_count_users DEFAULT 1,
-    name varchar(20) CONSTRAINT DF_chat_all_all_name DEFAULT NULL,
+    name varchar(30) CONSTRAINT DF_chat_all_all_name DEFAULT NULL,
     change_name boolean not null CONSTRAINT DF_chat_all_all_change_name DEFAULT false,
     CONSTRAINT PK_chat_all_all_id_chat primary key(id_chat),
     CONSTRAINT FK_chat_all_all_creator foreign key(creator) references user(id_user) on delete set NULL on update cascade,
@@ -85,37 +85,39 @@ c.execute('''CREATE TABLE IF NOT EXISTS chat(
 
 c.execute('''CREATE TRIGGER IF NOT EXISTS after_insert_chat_all_for_one
              after insert on chat_all_for_one
+             for each row
              begin
                   update chat_all_all set count_users = count_users + 1 
-                  where id_chat = id_ch_c;
+                  where id_chat = NEW.id_ch_c;
                   update chat_all_all set name = substring(
-                          (select (select name from user where id_user = creator) ||
-                              group_concat((select name from user where id_user = id_user_add), ',')
+                          (select (select name from user where id_user = creator) || ', ' ||
+                              group_concat((select name from user where id_user = id_user_add), ', ')
                           from chat_all_for_one
-                          where chat_all_all.id_chat = chat_all_for_one.id_ch_c),
-                      1, 20)
-                  where count_users > 2 and id_chat = id_ch_c and not change_name;
+                          where id_chat = NEW.id_ch_c),
+                      1, 30)
+                  where count_users > 2 and id_chat = NEW.id_ch_c and not change_name;
              end ''')
 
 c.execute('''CREATE TRIGGER IF NOT EXISTS after_delete_chat_all_for_one
              after delete on chat_all_for_one
+             for each row
              begin
                   update chat_all_all set count_users = count_users - 1 
-                  where id_chat = id_ch_c;
+                  where id_chat = OLD.id_ch_c;
                   update chat_all_all set name = substring(
-                          (select (select name from user where id_user = creator) ||
-                              group_concat((select name from user where id_user = id_user_add), ',')
+                          (select (select name from user where id_user = creator) || ', ' ||
+                              group_concat((select name from user where id_user = id_user_add), ', ')
                           from chat_all_for_one
-                          where chat_all_all.id_chat = chat_all_for_one.id_ch_c),
-                      1, 20)
-                  where count_users > 2 and id_chat = id_ch_c and not change_name;
+                          where id_chat = OLD.id_ch_c),
+                      1, 30)
+                  where count_users > 2 and id_chat = OLD.id_ch_c and not change_name;
              end ''')
 
 c.execute('''CREATE TRIGGER IF NOT EXISTS after_update_chat_all_all_name
              after update of name on chat_all_all
-             when not change_name
              begin
-                  update chat_all_all set change_name = true;
+                  update chat_all_all set change_name = true
+                  where NEW.name != OLD.name;
              end ''')
 
 c.execute('''CREATE TRIGGER IF NOT EXISTS after_insert_contact
@@ -252,6 +254,5 @@ pp.pprint(c.fetchall())
 print('\nChat')
 c.execute('''Select * from chat ''')
 ppp.pprint(c.fetchall())
-
 
 conn.close()
