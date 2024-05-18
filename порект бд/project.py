@@ -55,7 +55,7 @@ c.execute('''CREATE TABLE IF NOT EXISTS chat_all_all(
 c.execute('''CREATE TABLE IF NOT EXISTS chat_all_for_one(
     id_ch_c integer not null,
     id_user_add integer not null,
-    time_add date not null CONSTRAINT DF_chat_all_for_one_time_add DEFAULT current_date,
+    time_add text not null CONSTRAINT DF_chat_all_for_one_time_add DEFAULT current_date,
     CONSTRAINT PK_chat_all_for_one_id_ch_c_id_user_add primary key(id_ch_c, id_user_add),
     CONSTRAINT FK_chat_all_for_one_id_ch_c foreign key(id_ch_c) references chat_all_all(id_chat) on delete cascade on update cascade,
     CONSTRAINT FK_chat_all_for_one_id_user_add foreign key(id_user_add) references user(id_user) on delete cascade on update cascade
@@ -66,7 +66,7 @@ c.execute('''CREATE TABLE IF NOT EXISTS message_sskp(
     id_user integer not null,
     sms varchar(90) not null,
     type_sms varchar(10) not null,
-    time date not null CONSTRAINT DF_message_sskp_time DEFAULT current_date,
+    time text not null CONSTRAINT DF_message_sskp_time DEFAULT current_date,
     constraint PK_message_sskp_id_stroke primary key(id_stroke),
     constraint FK_message_sskp_id_user foreign key(id_user) references user(id_user) on delete set NULL on update cascade,
     CONSTRAINT CK_message_sskp_sms check(length(sms) > 0 and length(sms) < 90),
@@ -204,23 +204,23 @@ c.execute("INSERT INTO chat_all_all(creator) VALUES (1), (3), (3), (3), (10), (1
 conn.commit()
 
 
-chat_for_one = [ ( 1, 5, '2024-04-21 16:45:21'), ( 2, 10, ), ( 2, 15, ),
-                 ( 2, 20, ), ( 2, 7, ), ( 3, 8, ),
-                 ( 4, 1, ), ( 4, 2, ), ( 5, 19, ),
-                 ( 6, 23, ), ( 7, 20, ), ( 8, 6, ),
-                 ( 8, 7, ), ( 8, 8, ), ( 9, 19, ),
-                 ( 10, 4, ), ( 11, 13, ), ( 12, 14, ) ]
+chat_for_one = [ ( 1, 5, '2024-04-21 16:45:21'), ( 2, 10, '2024-04-22 07:38:09'), ( 2, 15, '2024-04-22 14:13:12'),
+                 ( 2, 20, '2024-04-23 15:55:25'), ( 2, 7, '2024-04-23 11:41:20'), ( 3, 8, '2024-04-23 12:35:00'),
+                 ( 4, 1, '2024-04-25 09:21:41'), ( 4, 2, '2024-04-25 16:42:56'), ( 5, 19, '2024-04-26 09:09:09'),
+                 ( 6, 23, '2024-04-27 19:46:21'), ( 7, 20, '2024-04-27 17:47:27'), ( 8, 6, '2024-04-28 23:23:23'),
+                 ( 8, 7, '2024-04-29 20:40:20'), ( 8, 8, '2024-04-30 10:30:07'), ( 9, 19, '2024-05-02 18:53:53'),
+                 ( 10, 4, '2024-05-03 00:03:32'), ( 11, 13, '2024-05-03 03:05:07'), ( 12, 14, '2024-05-03 17:38:04') ]
 
 c.executemany("INSERT INTO chat_all_for_one(id_ch_c, id_user_add, time_add) VALUES (?,?,?)", chat_for_one)
 conn.commit()
 
 
-m_s=[(1,'Стоит ли идти на пары в субботу?', 'text', '2024-04-21 15:45:20'),
-     (14,'конечно нет','text','2024-04-21 16:00'),
-     (10,'vsephotoru1715979334.jpeg','img','2024-04-21 19:15:10'),
-     (11,'ахаахах','text','2024-04-21 19:20:05'),
-     (15,'c://users/downloads/photo.png','img','2024-04-21 05:03:01')]
-#or hyperlink? IDK
+m_s=[ (1,'Стоит ли идти на пары в субботу?', 'text', '2024-05-04 15:45:20'),
+      (14,'конечно нет', 'text', '2024-05-05 16:00:02'),
+      (10,'vsephotoru1715979334.jpeg', 'img', '2024-05-16 19:15:10'),
+      (11,'ахаахах', 'text', '2024-05-17 19:20:05'),
+      (15,'c://users/downloads/photo.png', 'img', '2024-05-18 05:03:01') ]
+
 c.executemany("INSERT INTO message_sskp(id_user, sms, type_sms, time) values(?,?,?,?)", m_s)
 conn.commit()
 
