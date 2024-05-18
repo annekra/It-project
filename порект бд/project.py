@@ -117,7 +117,7 @@ c.execute('''CREATE TRIGGER IF NOT EXISTS after_update_chat_all_all_name
              after update of name on chat_all_all
              begin
                   update chat_all_all set change_name = true
-                  where NEW.name != OLD.name;
+                  where id_chat = NEW.id_chat and OLD.name != NEW.name;
              end ''')
 
 c.execute('''CREATE TRIGGER IF NOT EXISTS after_insert_contact
