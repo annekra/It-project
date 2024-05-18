@@ -85,13 +85,12 @@ c.execute('''CREATE TABLE IF NOT EXISTS chat(
 
 c.execute('''CREATE TRIGGER IF NOT EXISTS after_insert_chat_all_for_one
              after insert on chat_all_for_one
-             for each row
              begin
                   update chat_all_all set count_users = count_users + 1 
                   where id_chat = id_ch_c;
                   update chat_all_all set name = substring(
                           (select (select name from user where id_user = creator) ||
-                              string_agg((select name from user where id_user = id_user_add), ',')
+                              group_concat((select name from user where id_user = id_user_add), ',')
                           from chat_all_for_one
                           where chat_all_all.id_chat = chat_all_for_one.id_ch_c),
                       1, 20)
@@ -100,13 +99,12 @@ c.execute('''CREATE TRIGGER IF NOT EXISTS after_insert_chat_all_for_one
 
 c.execute('''CREATE TRIGGER IF NOT EXISTS after_delete_chat_all_for_one
              after delete on chat_all_for_one
-             for each row
              begin
                   update chat_all_all set count_users = count_users - 1 
                   where id_chat = id_ch_c;
                   update chat_all_all set name = substring(
                           (select (select name from user where id_user = creator) ||
-                              string_agg((select name from user where id_user = id_user_add), ',')
+                              group_concat((select name from user where id_user = id_user_add), ',')
                           from chat_all_for_one
                           where chat_all_all.id_chat = chat_all_for_one.id_ch_c),
                       1, 20)
@@ -133,7 +131,6 @@ c.execute('''CREATE TRIGGER IF NOT EXISTS after_insert_contact
 
 c.execute('''CREATE TRIGGER IF NOT EXISTS before_delete_user
              after delete on user
-             for each row
              when id_user in (select creator from chat_all_all)
              begin
                   update chat_all_all set creator = (
@@ -207,7 +204,7 @@ conn.commit()
 chat_for_one = [ ( 1, 5, '2024-04-21 16:45:21'), ( 2, 10, '2024-04-22 07:38:09'), ( 2, 15, '2024-04-22 14:13:12'),
                  ( 2, 20, '2024-04-23 15:55:25'), ( 2, 7, '2024-04-23 11:41:20'), ( 3, 8, '2024-04-23 12:35:00'),
                  ( 4, 1, '2024-04-25 09:21:41'), ( 4, 2, '2024-04-25 16:42:56'), ( 5, 19, '2024-04-26 09:09:09'),
-                 ( 6, 23, '2024-04-27 19:46:21'), ( 7, 20, '2024-04-27 17:47:27'), ( 8, 6, '2024-04-28 23:23:23'),
+                 ( 6, 22, '2024-04-27 19:46:21'), ( 7, 20, '2024-04-27 17:47:27'), ( 8, 6, '2024-04-28 23:23:23'),
                  ( 8, 7, '2024-04-29 20:40:20'), ( 8, 8, '2024-04-30 10:30:07'), ( 9, 19, '2024-05-02 18:53:53'),
                  ( 10, 4, '2024-05-03 00:03:32'), ( 11, 13, '2024-05-03 03:05:07'), ( 12, 14, '2024-05-03 17:38:04') ]
 
