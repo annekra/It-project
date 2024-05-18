@@ -215,11 +215,11 @@ c.executemany("INSERT INTO chat_all_for_one(id_ch_c, id_user_add, time_add) VALU
 conn.commit()
 
 
-m_s=[ (1,'Стоит ли идти на пары в субботу?', 'text', '2024-05-04 15:45:20'),
-      (14,'конечно нет', 'text', '2024-05-05 16:00:02'),
-      (10,'vsephotoru1715979334.jpeg', 'img', '2024-05-16 19:15:10'),
-      (11,'ахаахах', 'text', '2024-05-17 19:20:05'),
-      (15,'c://users/downloads/photo.png', 'img', '2024-05-18 05:03:01') ]
+m_s = [ (1,'Стоит ли идти на пары в субботу?', 'text', '2024-05-04 15:45:20'),
+        (14,'конечно нет', 'text', '2024-05-05 16:00:02'),
+        (10,'vsephotoru1715979334.jpeg', 'img', '2024-05-16 19:15:10'),
+        (11,'ахаахах', 'text', '2024-05-17 19:20:05'),
+        (15,'c://users/downloads/photo.png', 'img', '2024-05-18 05:03:01') ]
 
 c.executemany("INSERT INTO message_sskp(id_user, sms, type_sms, time) values(?,?,?,?)", m_s)
 conn.commit()
