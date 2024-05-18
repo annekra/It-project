@@ -221,13 +221,16 @@ m_s = [ (1,'Стоит ли идти на пары в субботу?', 'text', 
         (11,'ахаахах', 'text', '2024-05-17 19:20:05'),
         (15,'c://users/downloads/photo.png', 'img', '2024-05-18 05:03:01') ]
 
-c.executemany("INSERT INTO message_sskp(id_user, sms, type_sms, time) values(?,?,?,?)", m_s)
+c.executemany("INSERT INTO message_sskp(id_user, sms, type_sms, time) values (?,?,?,?)", m_s)
 conn.commit()
 
 
+chat_ps = [ (1,1), (1,2), (2,3), (2,4), (3,5) ]
+
+c.executemany("INSERT INTO chat(id_person_chat, id_stroke) values (?,?)", chat_ps)
+conn.commit()
+
 #ch_all=[('kris sara julia', 19,3,0),('utopia', 5,6,1),('para',9,7,0 ),('povorot ne  tyda',14,9,0),('blog c++', 11, 8,1), ('lia anna', 4,2,0)] запросы на изменение имени 
-
-
 
 #c.execute('''Select tbl_name, sql from sqlite_master  ''')
 #pp.pprint(c.fetchall())
