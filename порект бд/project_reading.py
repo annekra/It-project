@@ -68,7 +68,7 @@ c.execute("DELETE from user where id_user = 24")
 conn.commit()
 
 """
-User with error (надо же показать ей что все check unique получается работают как и триггеры)
+#User with error (надо же показать ей что все check unique получается работают как и триггеры)
 c.execute("INSERT INTO user (nickname, name, mail, password) VALUES ('vikysia', 'Аргентум Виктория', 'kryt@mail.ru','dfghbuk564hbj')")
 conn.commit()
 UNIQUE constraint failed: user.nickname
@@ -92,6 +92,28 @@ CHECK constraint failed: CK_user_name
 c.execute("INSERT INTO user (nickname, name, mail, password) VALUES ('a', 'dhffkhghsrxffkhyhsxfthkfyfyhkyfkhfykfkyufkfkyhfykhyfkhyyfh', 'kry1t@mail.ru','dfghbuk564hbj')")
 conn.commit()
 CHECK constraint failed: CK_user_name
+
+#contact errors
+
+c.execute("INSERT INTO contact (id_user, id_contact) VALUES (2, 2), (2, 3)")
+conn.commit()
+CHECK constraint failed: CK_contact_id_user_id_contact
+
+#chat_all_alll
+
+
+c.execute("INSERT INTO chat_all_all (id_chat,creator, count_users, name, change_name) VALUES (1,2,1,'me',0)")
+conn.commit()
+UNIQUE constraint failed: chat_all_all.id_chat
+
+c.execute("INSERT INTO chat_all_all (id_chat,creator, count_users, name, change_name) VALUES (1,2,5,'',0)")
+conn.commit()
+CHECK constraint failed: CK_chat_all_all_name_count_users
+
+#вот именно тут показано как работает default значение на count_user
+c.execute("INSERT INTO chat_all_all (id_chat,creator, name, change_name) VALUES (67,2,'me',0)")
+conn.commit()
+ (67, 2, 1, 'me', 0),
 """
 
 print('\nUser')
