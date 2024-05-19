@@ -22,27 +22,27 @@ conn.commit()
 c.execute("INSERT INTO message_sskp(id_user, sms, type_sms, time) values (10, 'Сессия близко...', 'text', '2024-05-18 11:18:30')")
 conn.commit()
 
-c.execute("INSERT INTO chat(id_person_chat, id_stroke) values (2,3)")
+c.execute("INSERT INTO chat(id_person_chat, id_stroke) values (2,6)")
 conn.commit()
 
 
 # Пример корректного удаления данных из каждой таблицы
-c.execute("DELETE from user where id_user = 24")
-conn.commit()
-
-c.execute("DELETE from contact where id_user = 1 and id_contact = 4")
-conn.commit()
-
-c.execute("DELETE from chat_all_all where id_chat = 13")
-conn.commit()
-
-c.execute("DELETE from chat_all_for_one where id_ch_c = 11 and id_user_add = 10")
+c.execute("DELETE from chat where id_person_chat = 2 and id_stroke = 6")
 conn.commit()
 
 c.execute("DELETE from message_sskp where id_stroke = 6")
 conn.commit()
 
-c.execute("DELETE from chat where id_person_chat = 2 and id_stroke = 3")
+c.execute("DELETE from chat_all_for_one where id_ch_c = 11 and id_user_add = 10")
+conn.commit()
+
+c.execute("DELETE from chat_all_all where id_chat = 13")
+conn.commit()
+
+c.execute("DELETE from contact where id_user = 1 and id_contact = 4")
+conn.commit()
+
+c.execute("DELETE from user where id_user = 24")
 conn.commit()
 
 
