@@ -13,7 +13,7 @@ c.execute('''drop table if exists contact''')
 c.execute('''drop table if exists user''')
 c.execute('''drop trigger if exists after_insert_chat_all_for_one''')
 c.execute('''drop trigger if exists after_delete_chat_all_for_one''')
-c.execute('''drop trigger if exists after_update_chat_all_all_name''')
+c.execute('''drop trigger if exists before_update_chat_all_all_name''')
 c.execute('''drop trigger if exists after_insert_contact''')
 c.execute('''drop trigger if exists before_delete_user''')
 
@@ -118,12 +118,14 @@ c.execute('''CREATE TRIGGER IF NOT EXISTS after_delete_chat_all_for_one
                   where count_users = 2;
              end ''')
 
-c.execute('''CREATE TRIGGER IF NOT EXISTS after_update_chat_all_all_name
-             after update of name on chat_all_all
+"""
+c.execute('''CREATE TRIGGER IF NOT EXISTS before_update_chat_all_all_name
+             before update of name on chat_all_all
              begin
                   update chat_all_all set change_name = true
-                  where OLD.name != NEW.name and id_chat = NEW.id_chat;
+                  where name != OLD.name;
              end ''')
+"""
 
 c.execute('''CREATE TRIGGER IF NOT EXISTS after_insert_contact
              after insert on contact
