@@ -239,33 +239,7 @@ chat_ps = [ (1,1), (1,2), (2,3), (2,4), (3,5) ]
 c.executemany("INSERT INTO chat(id_person_chat, id_stroke) values (?,?)", chat_ps)
 conn.commit()
 
-#ch_all=[('kris sara julia', 19,3,0),('utopia', 5,6,1),('para',9,7,0 ),('povorot ne  tyda',14,9,0),('blog c++', 11, 8,1), ('lia anna', 4,2,0)] запросы на изменение имени 
-
 #c.execute('''Select tbl_name, sql from sqlite_master  ''')
 #pp.pprint(c.fetchall())
-
-print('\nUser')
-c.execute('''Select * from user ''')
-pp.pprint(c.fetchall())
-
-print('\nContact')
-c.execute('''Select * from contact ''')
-ppp.pprint(c.fetchall())
-
-print('\nChat_all_all')
-c.execute('''Select * from chat_all_all ''')
-pp.pprint(c.fetchall())
-
-print('\nChat_all_for_one')
-c.execute('''Select * from chat_all_for_one ''')
-ppp.pprint(c.fetchall())
-
-print('\nMessage_sskp')
-c.execute('''Select * from message_sskp ''')
-pp.pprint(c.fetchall())
-
-print('\nChat')
-c.execute('''Select * from chat ''')
-ppp.pprint(c.fetchall())
 
 conn.close()
