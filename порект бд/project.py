@@ -28,7 +28,10 @@ c.execute('''CREATE TABLE IF NOT EXISTS user(
     CONSTRAINT PK_user_id_user primary key(id_user),
     CONSTRAINT UQ_user_nickname unique(nickname),
     CONSTRAINT UQ_user_mail unique(mail),
-    CONSTRAINT CK_user_password check(length(password) >= 8)
+    CONSTRAINT CK_user_nickname check(length(nickname) > 0 and length(nickname) <= 30),
+    CONSTRAINT CK_user_name check(length(name) > 0 and length(name) <= 40),
+    CONSTRAINT CK_user_mail check(length(mail) > 0 and length(mail) <= 40),
+    CONSTRAINT CK_user_password check(length(password) >= 8 and length(password) <= 20)
     )''')
 
 
@@ -49,7 +52,7 @@ c.execute('''CREATE TABLE IF NOT EXISTS chat_all_all(
     change_name boolean not null CONSTRAINT DF_chat_all_all_change_name DEFAULT false,
     CONSTRAINT PK_chat_all_all_id_chat primary key(id_chat),
     CONSTRAINT FK_chat_all_all_creator foreign key(creator) references user(id_user) on delete set NULL on update cascade,
-    CONSTRAINT CK_chat_all_all_name_count_users check(not(name not NULL and count_users = 2))
+    CONSTRAINT CK_chat_all_all_name_count_users check(not(name != NULL and count_users = 2) and length(name) > 0 and length(name) <= 30)
     )''')
 
 c.execute('''CREATE TABLE IF NOT EXISTS chat_all_for_one(
