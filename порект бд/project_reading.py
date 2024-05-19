@@ -53,6 +53,23 @@ c.execute("UPDATE chat_all_all set (name, change_name) = ('GG', 1) where id_chat
 conn.commit()
 """
 
+# Пример корректного изменения таблиц после удаления пользователя
+c.execute("INSERT INTO user (nickname, name, mail, password) VALUES ('turnoff', 'Виктор Тернов', 'turnoff@gmail.com', 'idktexttext')")
+conn.commit()
+
+c.execute("INSERT INTO chat_all_for_one(id_ch_c, id_user_add, time_add) VALUES (11, 24, '2024-05-18 11:17:32')")
+conn.commit()
+
+c.execute("INSERT INTO message_sskp(id_user, sms, type_sms, time) values (24, 'Сессия близко...', 'text', '2024-05-18 11:18:30')")
+conn.commit()
+
+c.execute("INSERT INTO chat(id_person_chat, id_stroke) values (11,6)")
+conn.commit()
+
+c.execute("DELETE from user where id_user = 24")
+conn.commit()
+#
+
 print('\nUser')
 c.execute('''Select * from user ''')
 pp.pprint(c.fetchall())
