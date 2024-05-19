@@ -97,11 +97,13 @@ c.execute("INSERT INTO chat(id_person_chat, id_stroke) values (6, 66)")
 """
 
 # Пример запроса на БД: сколько сообщений в чате
+print('\nChat-count_mess')
 c.execute('''Select id_chat, count(id_stroke) from chat_all_all left join chat on id_chat = id_person_chat
              group by id_chat ''')
 ppp.pprint(c.fetchall())
 
 # Пример запроса на БД: Когда пользователь впервые был добавлен в какой-либо чат
+print('\nUser_name-time_first_chat')
 c.execute('''Select user.name, min(time_add) from user left join chat_all_for_one on id_user = id_user_add
              group by id_user''')
 pp.pprint(c.fetchall())
