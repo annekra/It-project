@@ -73,6 +73,7 @@ c.execute('''CREATE TABLE IF NOT EXISTS message_sskp(
     time text not null CONSTRAINT DF_message_sskp_time DEFAULT current_date,
     constraint PK_message_sskp_id_stroke primary key(id_stroke),
     constraint FK_message_sskp_id_user foreign key(id_user) references user(id_user) on delete set NULL on update cascade,
+    CONSTRAINT UQ_message_sskp_id_user_time unique(id_user, time),
     CONSTRAINT CK_message_sskp_sms check(length(sms) > 0 and length(sms) < 90),
     CONSTRAINT CK_message_sskp_type_sms check(type_sms in ('text', 'img', 'video', 'audio', 'file', 'link', 'gif'))
     )''')
