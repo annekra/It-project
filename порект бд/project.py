@@ -53,7 +53,7 @@ c.execute('''CREATE TABLE IF NOT EXISTS chat_all_all(
     change_name boolean not null CONSTRAINT DF_chat_all_all_change_name DEFAULT false,
     CONSTRAINT PK_chat_all_all_id_chat primary key(id_chat),
     CONSTRAINT FK_chat_all_all_creator foreign key(creator) references user(id_user) on delete set NULL on update cascade,
-    CONSTRAINT CK_chat_all_all_name_count_users check(not(name != NULL and count_users = 2) and length(name) > 0 and length(name) <= 30)
+    CONSTRAINT CK_chat_all_all_name_count_users check(not(change_name and count_users = 2) and length(name) > 0 and length(name) <= 30)
     )''')
 
 c.execute('''CREATE TABLE IF NOT EXISTS chat_all_for_one(
