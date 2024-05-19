@@ -4,6 +4,7 @@ conn = sqlite3.connect('messenger.sqlite')
 c=conn.cursor()
 pp = pprint.PrettyPrinter(indent=1, width=80, compact=False)
 ppp = pprint.PrettyPrinter(indent=1, width=80, compact=True)
+c.execute('''PRAGMA foreign_keys = 1''')
 
 c.execute('''drop table if exists chat''')
 c.execute('''drop table if exists message_sskp''')
@@ -81,7 +82,7 @@ c.execute('''CREATE TABLE IF NOT EXISTS chat(
     id_stroke integer not null,
     CONSTRAINT PK_chat_all_for_one_id_stroke primary key(id_stroke),
     CONSTRAINT FK_chat_all_all_id_stroke foreign key(id_stroke) references message_sskp(id_stroke) on delete cascade on update cascade,  
-    CONSTRAINT FK_chat_all_all_id_person_chat foreign key(id_person_chat) references chat_all_for_one(id_ch_c) on delete cascade on update cascade   
+    CONSTRAINT FK_chat_all_all_id_person_chat foreign key(id_person_chat) references chat_all_all(id_chat) on delete cascade on update cascade   
     )''')
 
 ###
