@@ -68,7 +68,7 @@ c.execute("DELETE from user where id_user = 24")
 conn.commit()
 
 """
-User with error
+User with error (надо же показать ей что все check unique получается работают как и триггеры)
 c.execute("INSERT INTO user (nickname, name, mail, password) VALUES ('vikysia', 'Аргентум Виктория', 'kryt@mail.ru','dfghbuk564hbj')")
 conn.commit()
 UNIQUE constraint failed: user.nickname
