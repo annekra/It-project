@@ -6,6 +6,7 @@ pp = pprint.PrettyPrinter(indent=1, width=80, compact=False)
 ppp = pprint.PrettyPrinter(indent=1, width=80, compact=True)
 c.execute('''PRAGMA foreign_keys = 1''')
 
+
 # Пример корректного ввода данных в каждую таблицу
 c.execute("INSERT INTO user (nickname, name, mail, password) VALUES ('turnoff', 'Виктор Тернов', 'turnoff@gmail.com', 'idktexttext')")
 conn.commit()
@@ -50,9 +51,18 @@ conn.commit()
 c.execute("UPDATE chat_all_all set (name, change_name) = ('GG', 1) where id_chat = 2")
 conn.commit()
 
+c.execute("UPDATE chat_all_all set (name, change_name) = ('blog c++', 1) where id_chat = 2")
+conn.commit()
+
+c.execute("UPDATE chat_all_all set (name, change_name) = ('utopia', 1) where id_chat = 4")
+conn.commit()
+
 
 # Пример корректного изменения таблиц после удаления пользователя
 c.execute("INSERT INTO user (nickname, name, mail, password) VALUES ('turnoff', 'Виктор Тернов', 'turnoff@gmail.com', 'idktexttext')")
+conn.commit()
+
+c.execute("INSERT INTO contact(id_user, id_contact) VALUES (1,24), (24,1)")
 conn.commit()
 
 c.execute("INSERT INTO chat_all_for_one(id_ch_c, id_user_add, time_add) VALUES (11, 24, '2024-05-18 11:17:32')")
@@ -67,54 +77,35 @@ conn.commit()
 c.execute("DELETE from user where id_user = 24")
 conn.commit()
 
+
+# Примеры некорректных вводов, предусмотренных ограничениями
 """
-#User with error (надо же показать ей что все check unique получается работают как и триггеры)
-c.execute("INSERT INTO user (nickname, name, mail, password) VALUES ('vikysia', 'Аргентум Виктория', 'kryt@mail.ru','dfghbuk564hbj')")
-conn.commit()
-UNIQUE constraint failed: user.nickname
+# Ввод почты неустановленного формата
+c.execute("INSERT INTO user (nickname, name, mail, password) VALUES ('turnoff', 'Виктор Тернов', 'turnoff@gmail.con', 'idktexttext')")
 
-c.execute("INSERT INTO user (nickname, name, mail, password) VALUES ('vikysi', 'Аргентум Виктор', 'kryt@mail.ru','dfghbuk564hbj')")
-conn.commit()
-UNIQUE constraint failed: user.mail
+# Ввод контакта с самим собой
+c.execute("INSERT INTO contact(id_user, id_contact) VALUES (1,1)")
 
-c.execute("INSERT INTO user (nickname, name, mail, password) VALUES ('', 'Аргентум Урия', 'kry1t@mail.ru','dfghbuk564hbj')")
-conn.commit()
-CHECK constraint failed: CK_user_nickname
+# Изменение имени чата, в котором 2 участника (изменение имен чатов допустимо только для бесед)
+c.execute("UPDATE chat_all_all set (name, change_name) = ('GG', 1) where id_chat = 1")
 
-c.execute("INSERT INTO user (nickname, name, mail, password) VALUES ('asdfghjkl;lkjhgfdsdfffghijkkojiuytrghjkl;gdrtfytfutfkjhftghjk', 'Аргентум Урия', 'kry1t@mail.ru','dfghbuk564hbj')")
-conn.commit()
-CHECK constraint failed: CK_user_nickname
+# Пустое сообщение с некорректным типом
+c.execute("INSERT INTO message_sskp(id_user, sms, type_sms, time) values (21, '', 'tekst', '2024-05-13 13:13:13')")
 
-c.execute("INSERT INTO user (nickname, name, mail, password) VALUES ('a', '', 'kry1t@mail.ru','dfghbuk564hbj')")
-conn.commit()
-CHECK constraint failed: CK_user_name
-
-c.execute("INSERT INTO user (nickname, name, mail, password) VALUES ('a', 'dhffkhghsrxffkhyhsxfthkfyfyhkyfkhfykfkyufkfkyhfykhyfkhyyfh', 'kry1t@mail.ru','dfghbuk564hbj')")
-conn.commit()
-CHECK constraint failed: CK_user_name
-
-#contact errors
-
-c.execute("INSERT INTO contact (id_user, id_contact) VALUES (2, 2), (2, 3)")
-conn.commit()
-CHECK constraint failed: CK_contact_id_user_id_contact
-
-#chat_all_alll
-
-
-c.execute("INSERT INTO chat_all_all (id_chat,creator, count_users, name, change_name) VALUES (1,2,1,'me',0)")
-conn.commit()
-UNIQUE constraint failed: chat_all_all.id_chat
-
-c.execute("INSERT INTO chat_all_all (id_chat,creator, count_users, name, change_name) VALUES (1,2,5,'',0)")
-conn.commit()
-CHECK constraint failed: CK_chat_all_all_name_count_users
-
-#вот именно тут показано как работает default значение на count_user
-c.execute("INSERT INTO chat_all_all (id_chat,creator, name, change_name) VALUES (67,2,'me',0)")
-conn.commit()
- (67, 2, 1, 'me', 0),
+# Несответствие ключей: id_stroke = 66 нет в message_sskp
+c.execute("INSERT INTO chat(id_person_chat, id_stroke) values (6, 66)")
 """
+
+# Пример запроса на БД: сколько сообщений в чате
+c.execute('''Select id_chat, count(id_stroke) from chat_all_all left join chat on id_chat = id_person_chat
+             group by id_chat ''')
+ppp.pprint(c.fetchall())
+
+# Пример запроса на БД: Когда пользователь впервые был добавлен в какой-либо чат
+c.execute('''Select user.name, min(time_add) from user left join chat_all_for_one on id_user = id_user_add
+             group by id_user''')
+pp.pprint(c.fetchall())
+
 
 print('\nUser')
 c.execute('''Select * from user ''')
@@ -139,8 +130,6 @@ pp.pprint(c.fetchall())
 print('\nChat')
 c.execute('''Select * from chat ''')
 ppp.pprint(c.fetchall())
-
-#ch_all=[('kris sara julia', 19,3,0),('utopia', 5,6,1),('para',9,7,0 ),('povorot ne  tyda',14,9,0),('blog c++', 11, 8,1), ('lia anna', 4,2,0)] запросы на изменение имени 
 
 #c.execute('''Select * from sqlite_master''')
 #pp.pprint(c.fetchall())
