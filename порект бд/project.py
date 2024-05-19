@@ -67,7 +67,7 @@ c.execute('''CREATE TABLE IF NOT EXISTS chat_all_for_one(
 
 c.execute('''CREATE TABLE IF NOT EXISTS message_sskp(
     id_stroke integer not null,
-    id_user integer not null,
+    id_user integer,
     sms varchar(90) not null,
     type_sms varchar(10) not null,
     time text not null CONSTRAINT DF_message_sskp_time DEFAULT current_date,
