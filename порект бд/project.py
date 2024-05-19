@@ -30,7 +30,7 @@ c.execute('''CREATE TABLE IF NOT EXISTS user(
     CONSTRAINT UQ_user_mail unique(mail),
     CONSTRAINT CK_user_nickname check(length(nickname) > 0 and length(nickname) <= 30),
     CONSTRAINT CK_user_name check(length(name) > 0 and length(name) <= 40),
-    CONSTRAINT CK_user_mail check(length(mail) > 0 and length(mail) <= 40),
+    CONSTRAINT CK_user_mail check(length(mail) > 0 and length(mail) <= 40 and (mail like '%@gmail.com' or mail like '%@mail.ru')),
     CONSTRAINT CK_user_password check(length(password) >= 8 and length(password) <= 20)
     )''')
 
