@@ -67,6 +67,32 @@ conn.commit()
 c.execute("DELETE from user where id_user = 24")
 conn.commit()
 
+"""
+User with error
+c.execute("INSERT INTO user (nickname, name, mail, password) VALUES ('vikysia', 'Аргентум Виктория', 'kryt@mail.ru','dfghbuk564hbj')")
+conn.commit()
+UNIQUE constraint failed: user.nickname
+
+c.execute("INSERT INTO user (nickname, name, mail, password) VALUES ('vikysi', 'Аргентум Виктор', 'kryt@mail.ru','dfghbuk564hbj')")
+conn.commit()
+UNIQUE constraint failed: user.mail
+
+c.execute("INSERT INTO user (nickname, name, mail, password) VALUES ('', 'Аргентум Урия', 'kry1t@mail.ru','dfghbuk564hbj')")
+conn.commit()
+CHECK constraint failed: CK_user_nickname
+
+c.execute("INSERT INTO user (nickname, name, mail, password) VALUES ('asdfghjkl;lkjhgfdsdfffghijkkojiuytrghjkl;gdrtfytfutfkjhftghjk', 'Аргентум Урия', 'kry1t@mail.ru','dfghbuk564hbj')")
+conn.commit()
+CHECK constraint failed: CK_user_nickname
+
+c.execute("INSERT INTO user (nickname, name, mail, password) VALUES ('a', '', 'kry1t@mail.ru','dfghbuk564hbj')")
+conn.commit()
+CHECK constraint failed: CK_user_name
+
+c.execute("INSERT INTO user (nickname, name, mail, password) VALUES ('a', 'dhffkhghsrxffkhyhsxfthkfyfyhkyfkhfykfkyufkfkyhfykhyfkhyyfh', 'kry1t@mail.ru','dfghbuk564hbj')")
+conn.commit()
+CHECK constraint failed: CK_user_name
+"""
 
 print('\nUser')
 c.execute('''Select * from user ''')
