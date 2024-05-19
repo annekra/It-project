@@ -91,10 +91,10 @@ c.execute('''CREATE TRIGGER IF NOT EXISTS after_insert_chat_all_for_one
                   where id_chat = NEW.id_ch_c;
                   update chat_all_all set name = substring(
                           (select (select name from user where id_user = creator) || ', ' ||
-                              group_concat((select name from user where id_user = id_user_add), ', ')
+                              group_concat((select name from user where id_user = NEW.id_user_add), ', ')
                           from chat_all_for_one
                           where id_chat = NEW.id_ch_c),
-                      1, 30)
+                      1, 27) || '...'
                   where count_users > 2 and id_chat = NEW.id_ch_c and not change_name;
              end ''')
 
@@ -106,18 +106,20 @@ c.execute('''CREATE TRIGGER IF NOT EXISTS after_delete_chat_all_for_one
                   where id_chat = OLD.id_ch_c;
                   update chat_all_all set name = substring(
                           (select (select name from user where id_user = creator) || ', ' ||
-                              group_concat((select name from user where id_user = id_user_add), ', ')
+                              group_concat((select name from user where id_user = OLD.id_user_add), ', ')
                           from chat_all_for_one
                           where id_chat = OLD.id_ch_c),
-                      1, 30)
+                      1, 27) || '...'
                   where count_users > 2 and id_chat = OLD.id_ch_c and not change_name;
+                  update chat_all_all set name = NULL
+                  where count_users = 2;
              end ''')
 
 c.execute('''CREATE TRIGGER IF NOT EXISTS after_update_chat_all_all_name
              after update of name on chat_all_all
              begin
                   update chat_all_all set change_name = true
-                  where id_chat = NEW.id_chat and OLD.name != NEW.name;
+                  where OLD.name != NEW.name and id_chat = NEW.id_chat;
              end ''')
 
 c.execute('''CREATE TRIGGER IF NOT EXISTS after_insert_contact
@@ -133,7 +135,7 @@ c.execute('''CREATE TRIGGER IF NOT EXISTS after_insert_contact
 
 c.execute('''CREATE TRIGGER IF NOT EXISTS before_delete_user
              after delete on user
-             when id_user in (select creator from chat_all_all)
+             when OLD.id_user in (select creator from chat_all_all)
              begin
                   update chat_all_all set creator = (
                       select id_user_add from chat_all_for_one as cafo1
