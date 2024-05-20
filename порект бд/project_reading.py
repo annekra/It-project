@@ -108,6 +108,16 @@ c.execute('''Select user.name, min(time_add) from user left join chat_all_for_on
              group by id_user''')
 pp.pprint(c.fetchall())
 
+# Пример запроса на БД: В каких чатах состоит пользователь
+print('\nUser_id-chat_id')
+c.execute('''Select user_id, group_concat(chat_id, ', ')
+             from (Select id_user_add as user_id, id_ch_c as chat_id from chat_all_for_one
+                   union
+                   Select creator, id_chat from chat_all_all
+                   union
+                   Select id_user, NULL from user)
+             group by user_id''')
+ppp.pprint(c.fetchall())
 
 print('\nUser')
 c.execute('''Select * from user ''')
